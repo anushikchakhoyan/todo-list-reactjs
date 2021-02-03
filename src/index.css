@@ -20,12 +20,3 @@ body {
     text-align: center;
     background-color: gray;
 }
-
-.container {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    background-color: var(--light-gray);
-    height: calc(100vh - var(--footer-size) - var(--header-size));
-}
