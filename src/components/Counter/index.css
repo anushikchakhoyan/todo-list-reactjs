@@ -1,0 +1,23 @@
+.counter-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.counter-actions {
+   padding-left: 30px;
+}
+
+.counter-actions > button {
+    margin: 5px;
+    border: none;
+    width: 30px;
+    color: white;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: black;
+}
+
+.counter-actions > button:focus {
+    outline: none;
+}

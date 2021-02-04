@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-import styles from "./index.module.css";
 import Card from "./Card";
 
 const AppContent = ({description}) => {
@@ -24,11 +23,11 @@ const AppContent = ({description}) => {
     ]
 
     return (
-        <section className={styles.container}>
+        <>
             <h2>Technology</h2>
             <p>{description}</p>
             <Card items={items} />
-        </section>
+        </>
     );
 }
 
