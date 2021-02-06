@@ -15,7 +15,7 @@ class ToDo extends Component {
         }
     }
 
-    handleOnSubmit(event) {
+    handleOnSubmit = (event) => {
         event.preventDefault();
     }
 
