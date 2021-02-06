@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 
-import styles from './index.css';
 import Result from "./Result";
 import Action from "./Action";
+import './index.css';
 
 class Counter extends Component {
-    state = {
-        count: 0,
-    }
+   constructor(props) {
+       super(props);
+       this.state = {
+           count: 0,
+       }
+   }
 
     handlePlusCount = () => {
         this.setState({
