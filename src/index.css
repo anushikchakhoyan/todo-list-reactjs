@@ -41,3 +41,8 @@ body {
     align-items: center;
     flex-direction: column;
 }
+
+button:focus,
+input:focus {
+    outline: none;
+}
