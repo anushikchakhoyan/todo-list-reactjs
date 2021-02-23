@@ -1,3 +1,7 @@
+.todo-item {
+    width: 22rem;
+}
+
 .todo-item:hover {
     cursor: pointer;
     position: relative;
@@ -12,4 +16,8 @@
     right: 0;
     opacity: 0;
     position: absolute;
+}
+
+.todo-item.selected {
+    background-color: rgba(86, 165, 251, 0.16);
 }
