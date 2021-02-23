@@ -105,6 +105,7 @@ class ToDo extends Component {
                             <Task
                                 {...task}
                                 disabled={!!removeTasks.size}
+                                isChecked={removeTasks.has(task._id)}
                                 handleRemoveTaskById={this.handleRemoveTaskById}
                                 handleRemoveTaskByIds={this.handleRemoveTaskByIds}
                             />
