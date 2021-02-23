@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Col, Container, Row} from "react-bootstrap";
+import {Col, Container, Row, Button} from "react-bootstrap";
 
 import idGenerator from "../../helpers/idGenerator";
 import Notification from "../Notification";
@@ -14,21 +14,18 @@ class ToDo extends Component {
             tasks: [
                 {
                     _id: idGenerator(),
-                    isChecked: false,
                     title: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
                 },
                 {
                     _id: idGenerator(),
-                    isChecked: false,
                     title: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
                 },
                 {
                     _id: idGenerator(),
-                    isChecked: false,
                     title: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
                 },
-
             ],
+            removeTasks: new Set()
         }
     }
 
@@ -52,35 +49,64 @@ class ToDo extends Component {
         });
     }
 
-    toggleCheckbox = (id) => {
-        this.state.tasks.map(item => item._id === id && this.setState({ ...item, isChecked: item.isChecked = !item.isChecked}));
+    handleRemoveTaskByIds = (_id) => {
+        let removeTasks = new Set(this.state.removeTasks);
+        removeTasks.has(_id) ? removeTasks.delete(_id) : removeTasks.add(_id);
+        this.setState({
+            removeTasks
+        });
+    }
+
+    handleRemoveSelectedTasks = () => {
+        let tasks = [...this.state.tasks];
+        const { removeTasks } = this.state;
+        tasks = tasks.filter(item => !removeTasks.has(item._id));
+        this.setState({
+            tasks,
+            removeTasks: new Set()
+        });
+
     }
 
     render() {
-        const {tasks} = this.state;
+        const {tasks, removeTasks} = this.state;
+
         return (
             <Container fluid>
-                <Row className="mt-4">
+                <Row className="my-4">
                     <Col>
                         <AddNewTask
+                            disabled={!!removeTasks.size}
                             handleSubmit={this.handleSubmit}
                         />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="d-flex justify-content-end">
+                        <Button
+                            variant="danger"
+                            disabled={!!!removeTasks.size}
+                            onClick={this.handleRemoveSelectedTasks}
+                        >
+                            Remove Selected
+                        </Button>
                     </Col>
                 </Row>
                 <Row className="mt-4">
                     {!tasks.length && <Notification variant="danger" text="The List is empty."/>}
                     {tasks.map(task => (
                         <Col
-                            xs={12}
-                            md={6}
                             lg={3}
+                            md={6}
+                            xs={12}
                             key={task._id}
                             className="d-flex justify-content-center my-3"
                         >
                             <Task
                                 {...task}
-                                toggleCheckbox={this.toggleCheckbox}
+                                disabled={!!removeTasks.size}
                                 handleRemoveTaskById={this.handleRemoveTaskById}
+                                handleRemoveTaskByIds={this.handleRemoveTaskByIds}
                             />
                         </Col>
                     ))}
