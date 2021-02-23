@@ -18,7 +18,7 @@ class AddNewTask extends Component {
         });
     }
 
-    handleS = ({ key, type }) => {
+    handleOnKeyPress = ({ key, type }) => {
         if (type === 'keypress' && key !== 'Enter') return;
 
         const { inputValue } = this.state;
@@ -31,20 +31,24 @@ class AddNewTask extends Component {
     }
 
     render() {
+        const { disabled } = this.props;
         const { inputValue } = this.state;
+
         return (
             <Container className="d-flex justify-content-center mt-4">
                 <Control
                     type="text"
                     value={inputValue}
+                    disabled={disabled}
                     placeholder="Take a note..."
                     onChange={this.handleChange}
-                    onKeyPress={this.handleS}
+                    onKeyPress={this.handleOnKeyPress}
                 />
                 <Button
+                    className="mx-2"
                     variant="primary"
-                    onClick={this.handleS}
                     disabled={!!!inputValue}
+                    onClick={this.handleOnKeyPress}
                 >
                     Add
                 </Button>
