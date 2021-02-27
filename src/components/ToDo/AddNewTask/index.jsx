@@ -6,6 +6,7 @@ const { Control } = Form;
 class AddNewTask extends Component {
     constructor(props) {
         super(props);
+        this.inputReference = React.createRef();
         this.state = {
             inputValue: ''
         }
@@ -30,6 +31,10 @@ class AddNewTask extends Component {
         });
     }
 
+    componentDidMount() {
+        this.inputReference.current.focus();
+    }
+
     render() {
         const { disabled } = this.props;
         const { inputValue } = this.state;
@@ -40,6 +45,7 @@ class AddNewTask extends Component {
                     type="text"
                     value={inputValue}
                     disabled={disabled}
+                    ref={this.inputReference}
                     placeholder="Take a note..."
                     onChange={this.handleChange}
                     onKeyPress={this.handleOnKeyPress}
