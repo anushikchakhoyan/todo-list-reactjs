@@ -9,7 +9,7 @@ const Task = memo(({_id, isChecked, title, disabled, handleRemoveTaskByIds, hand
     return (
         <Card className={`todo-item ${isChecked && 'selected'}`}>
             <Body>
-                <input type="checkbox" onClick={() => handleRemoveTaskByIds(_id)} />
+                <input type="checkbox" onChange={() => handleRemoveTaskByIds(_id)} checked={isChecked} />
                 <Text><b>Description:</b> {title}</Text>
                 <div className="d-flex flex-column align-items-center todo-item-actions">
                     <Button
