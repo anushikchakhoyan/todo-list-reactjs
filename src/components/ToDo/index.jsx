@@ -25,7 +25,8 @@ class ToDo extends Component {
                     title: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
                 },
             ],
-            removeTasks: new Set()
+            removeTasks: new Set(),
+            isAllChecked: false
         }
     }
 
@@ -63,13 +64,27 @@ class ToDo extends Component {
         tasks = tasks.filter(item => !removeTasks.has(item._id));
         this.setState({
             tasks,
-            removeTasks: new Set()
+            removeTasks: new Set(),
+            isAllChecked: false
         });
+    }
 
+    handleCheckAll = () => {
+        const { tasks, isAllChecked } = this.state;
+        let removeTasks = new Set();
+        if (!isAllChecked) {
+            removeTasks = new Set(this.state.removeTasks);
+            tasks.forEach(task => removeTasks.add(task._id));
+        }
+
+        this.setState({
+            removeTasks,
+            isAllChecked: !isAllChecked
+        });
     }
 
     render() {
-        const {tasks, removeTasks} = this.state;
+        const {tasks, removeTasks, isAllChecked} = this.state;
 
         return (
             <Container fluid>
@@ -84,15 +99,24 @@ class ToDo extends Component {
                 <Row>
                     <Col className="d-flex justify-content-end">
                         <Button
-                            variant="danger"
+                            className="mx-1"
+                            variant="outline-danger"
                             disabled={!!!removeTasks.size}
                             onClick={this.handleRemoveSelectedTasks}
                         >
                             Remove Selected
                         </Button>
+                        <Button
+                            className="mx-1"
+                            variant="outline-info"
+                            disabled={!!!tasks.length}
+                            onClick={this.handleCheckAll}
+                        >
+                            {isAllChecked ? 'Remove All Selected' : 'Select All'}
+                        </Button>
                     </Col>
                 </Row>
-                <Row className="mt-4">
+                <Row className="mt-4 align-items-start">
                     {!tasks.length && <Notification variant="danger" text="The List is empty."/>}
                     {tasks.map(task => (
                         <Col
