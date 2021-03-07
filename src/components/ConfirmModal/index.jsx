@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import {Modal, Button} from "react-bootstrap";
 import {IoWarningOutline} from "react-icons/all";
 
-import "./index.css";
-
 const {Header, Title, Body, Footer} = Modal;
 
 const ConfirmModal = ({onClose, onSubmit, isShow, message}) => {
@@ -21,7 +19,7 @@ const ConfirmModal = ({onClose, onSubmit, isShow, message}) => {
         >
             <Header closeButton className="border-0">
                 <Title className="d-flex align-items-center custom-modal-title">
-                    <IoWarningOutline className="confirm-icon" />
+                    <IoWarningOutline className="mx-3" />
                      Are you sure?
                 </Title>
             </Header>

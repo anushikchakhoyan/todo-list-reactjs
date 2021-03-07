@@ -37,3 +37,11 @@ input:focus {
     outline: none !important;
     box-shadow: none !important;
 }
+
+.custom-modal-title {
+    color: #6c757d;
+}
+
+.custom-modal-footer {
+    background-color: #efefef;
+}
