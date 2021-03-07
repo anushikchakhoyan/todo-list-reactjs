@@ -5,7 +5,9 @@ import {RiCloseFill, MdEdit} from "react-icons/all";
 
 const {Body, Text} = Card;
 
-const Task = memo(({_id, isChecked, title, description, disabled, handleRemoveTaskByIds, handleRemoveTaskById}) => {
+const Task = memo(({task, isChecked, disabled, handleRemoveTaskByIds, handleRemoveTaskById, handleSetEditTask}) => {
+   const { _id, title, description } = task;
+
     return (
         <Card className={`todo-item ${isChecked && 'selected'}`}>
             <Body>
@@ -19,7 +21,8 @@ const Task = memo(({_id, isChecked, title, description, disabled, handleRemoveTa
                         onClick={() => handleRemoveTaskById(_id)}>
                         <RiCloseFill className="text-white"/>
                     </Button>
-                    <Button  disabled={disabled} variant="secondary" className="my-1 text-white">
+                    <Button  disabled={disabled} variant="secondary" className="my-1 text-white"
+                             onClick={() => handleSetEditTask(task)}>
                        <MdEdit />
                     </Button>
                 </div>
@@ -29,10 +32,14 @@ const Task = memo(({_id, isChecked, title, description, disabled, handleRemoveTa
 })
 
 Task.propTypes = {
+    task: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired
+    }),
     disabled: PropTypes.bool,
     isChecked: PropTypes.bool,
-    _id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    handleSetEditTask: PropTypes.func,
     handleRemoveTaskById: PropTypes.func.isRequired,
     handleRemoveTaskByIds: PropTypes.func.isRequired,
 };
