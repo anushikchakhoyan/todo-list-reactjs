@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {Form, Button, Container} from 'react-bootstrap';
 
 const { Control } = Form;
@@ -8,26 +9,31 @@ class AddNewTask extends Component {
         super(props);
         this.inputReference = React.createRef();
         this.state = {
-            inputValue: ''
+            title: '',
+            description: ''
         }
     }
 
     handleChange = (event) => {
-        const { value } = event.target;
+        const { name, value } = event.target;
         this.setState({
-            inputValue: value
+            [name]: value
         });
     }
 
     handleOnKeyPress = ({ key, type }) => {
         if (type === 'keypress' && key !== 'Enter') return;
 
-        const { inputValue } = this.state;
         const { handleSubmit } = this.props;
-
-        handleSubmit(inputValue);
+        const { title, description } = this.state;
+        const formData = {
+            title,
+            description
+        };
+        handleSubmit(formData);
         this.setState({
-            inputValue: ''
+            title: '',
+            description: ''
         });
     }
 
@@ -37,30 +43,47 @@ class AddNewTask extends Component {
 
     render() {
         const { disabled } = this.props;
-        const { inputValue } = this.state;
+        const {  title, description } = this.state;
 
         return (
-            <Container className="d-flex justify-content-center mt-4">
+            <Container className="d-flex flex-column align-items-center justify-content-center mt-4">
                 <Control
                     type="text"
-                    value={inputValue}
+                    name="title"
+                    value={title}
+                    className="my-2"
                     disabled={disabled}
                     ref={this.inputReference}
-                    placeholder="Take a note..."
+                    placeholder="Title"
                     onChange={this.handleChange}
                     onKeyPress={this.handleOnKeyPress}
+                />
+                <Control
+                    rows={3}
+                    type="text"
+                    as="textarea"
+                    className="my-2"
+                    name="description"
+                    value={description}
+                    placeholder="Description"
+                    onChange={this.handleChange}
                 />
                 <Button
                     className="mx-2"
                     variant="primary"
-                    disabled={!!!inputValue}
                     onClick={this.handleOnKeyPress}
+                    disabled={!(!!title && !!description)}
                 >
                     Add
                 </Button>
             </Container>
         );
     }
+}
+
+AddNewTask.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    handleSubmit: PropTypes.func.isRequired
 }
 
 export default AddNewTask;

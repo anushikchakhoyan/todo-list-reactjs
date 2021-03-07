@@ -5,12 +5,13 @@ import {RiCloseFill, MdEdit} from "react-icons/all";
 
 const {Body, Text} = Card;
 
-const Task = memo(({_id, isChecked, title, disabled, handleRemoveTaskByIds, handleRemoveTaskById}) => {
+const Task = memo(({_id, isChecked, title, description, disabled, handleRemoveTaskByIds, handleRemoveTaskById}) => {
     return (
         <Card className={`todo-item ${isChecked && 'selected'}`}>
             <Body>
                 <input type="checkbox" onChange={() => handleRemoveTaskByIds(_id)} checked={isChecked} />
-                <Text><b>Description:</b> {title}</Text>
+                <Text><b>Title:</b> {title}</Text>
+                <Text><b>Description:</b> {description}</Text>
                 <div className="d-flex flex-column align-items-center todo-item-actions">
                     <Button
                         variant="danger"
