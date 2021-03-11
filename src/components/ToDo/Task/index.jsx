@@ -5,28 +5,28 @@ import {RiCloseFill, MdEdit} from "react-icons/all";
 
 const {Body, Text} = Card;
 
-const Task = memo(({task, isChecked, disabled, handleRemoveTaskByIds, handleRemoveTaskById, handleSetEditTask}) => {
-   const { _id, title, description } = task;
+const Task = memo(({task, isChecked, disabled, toggleSetRemoveTaskId, handleRemoveSingleTask, handleSetEditTask}) => {
+    const {_id, title, description} = task;
 
     return (
         <Card className={`todo-item ${isChecked && 'selected'}`}>
-            <Body>
-                <input type="checkbox" onChange={() => handleRemoveTaskByIds(_id)} checked={isChecked} />
+            <Body className="todo-item-body">
+                <input type="checkbox" onChange={() => toggleSetRemoveTaskId(_id)} checked={isChecked}/>
                 <Text><b>Title:</b> {title}</Text>
                 <Text><b>Description:</b> {description}</Text>
-                <div className="d-flex flex-column align-items-center todo-item-actions">
-                    <Button
-                        variant="danger"
-                        disabled={disabled}
-                        onClick={() => handleRemoveTaskById(_id)}>
-                        <RiCloseFill className="text-white"/>
-                    </Button>
-                    <Button  disabled={disabled} variant="secondary" className="my-1 text-white"
-                             onClick={() => handleSetEditTask(task)}>
-                       <MdEdit />
-                    </Button>
-                </div>
             </Body>
+            <div className="d-flex flex-column align-items-center todo-item-actions">
+                <Button
+                    variant="danger"
+                    disabled={disabled}
+                    onClick={() => handleRemoveSingleTask(_id)}>
+                    <RiCloseFill className="text-white"/>
+                </Button>
+                <Button disabled={disabled} variant="secondary" className="my-1 text-white"
+                        onClick={() => handleSetEditTask(task)}>
+                    <MdEdit/>
+                </Button>
+            </div>
         </Card>
     )
 })
@@ -40,8 +40,8 @@ Task.propTypes = {
     disabled: PropTypes.bool,
     isChecked: PropTypes.bool,
     handleSetEditTask: PropTypes.func,
-    handleRemoveTaskById: PropTypes.func.isRequired,
-    handleRemoveTaskByIds: PropTypes.func.isRequired,
+    toggleSetRemoveTaskId: PropTypes.func.isRequired,
+    handleRemoveSingleTask: PropTypes.func.isRequired,
 };
 
 export default Task;

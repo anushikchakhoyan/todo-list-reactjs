@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Col, Container, Row, Button} from "react-bootstrap";
 
-import idGenerator from "../../helpers/idGenerator";
 import AddEditTaskModal from "./AddEditTaskModal";
 import ConfirmModal from "../ConfirmModal";
 import Notification from "../Notification";
@@ -13,23 +12,7 @@ class ToDo extends Component {
         super(props);
 
         this.state = {
-            tasks: [
-                {
-                    _id: idGenerator(),
-                    title: `Lorem Ipsum`,
-                    description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
-                },
-                {
-                    _id: idGenerator(),
-                    title: `Lorem Ipsum`,
-                    description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
-                },
-                {
-                    _id: idGenerator(),
-                    title: `Lorem Ipsum`,
-                    description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
-                },
-            ],
+            tasks: [],
             editableTask: null,
             isAllChecked: false,
             removeTasks: new Set(),
@@ -39,27 +22,33 @@ class ToDo extends Component {
     }
 
     handleSubmit = (formData) => {
-        if (!formData.title || !formData.description) return;
         const tasks = [...this.state.tasks];
-        tasks.push({
-            _id: idGenerator(),
-            title: formData.title,
-            description: formData.description,
-        });
-        this.setState({
-            tasks
-        });
+
+        if (!formData.title || !formData.description) return;
+
+        fetch("http://localhost:3001/task", {
+            method: "POST",
+            body: JSON.stringify(formData),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(result => result.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                tasks.push(data)
+                this.setState({
+                    tasks
+                });
+            })
+            .catch(error => {
+                console.error("catch Error", error);
+            });
     }
 
-    handleRemoveTaskById = (id) => {
-        let tasks = [...this.state.tasks];
-        tasks = tasks.filter(item => item._id !== id);
-        this.setState({
-            tasks
-        });
-    }
-
-    handleRemoveTaskByIds = (_id) => {
+    toggleSetRemoveTaskId = (_id) => {
         let removeTasks = new Set(this.state.removeTasks);
         removeTasks.has(_id) ? removeTasks.delete(_id) : removeTasks.add(_id);
         this.setState({
@@ -67,18 +56,54 @@ class ToDo extends Component {
         });
     }
 
-    handleRemoveSelectedTasks = () => {
-        let tasks = [...this.state.tasks];
-        const {removeTasks} = this.state;
-        tasks = tasks.filter(item => !removeTasks.has(item._id));
-        this.setState({
-            tasks,
-            removeTasks: new Set(),
-            isAllChecked: false
-        });
+    handleRemoveSingleTask = (_id) => {
+        fetch(`http://localhost:3001/task/${_id}`, {
+            method: "DELETE"
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                let tasks = [...this.state.tasks];
+                tasks = tasks.filter(item => item._id !== _id);
+                this.setState({
+                    tasks
+                });
+            })
+            .catch(error => {
+                console.error("Delete Task By ID Request Error", error);
+            });
     }
 
-    handleCheckAll = () => {
+    handleRemoveSelectedTasks = () => {
+        fetch("http://localhost:3001/task", {
+            method: "PATCH",
+            body: JSON.stringify({ tasks: Array.from(this.state.removeTasks) }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                let tasks = [...this.state.tasks];
+                const { removeTasks } = this.state;
+                tasks = tasks.filter(item => !removeTasks.has(item._id));
+                this.setState({
+                    tasks,
+                    removeTasks: new Set(),
+                    isAllChecked: false
+                });
+            })
+            .catch(error => {
+                console.error("Bulk Delete Tasks Request Error", error);
+            });
+    }
+
+    handleToggleSelectAllTask = () => {
         const {tasks, isAllChecked} = this.state;
         let removeTasks = new Set();
         if (!isAllChecked) {
@@ -93,12 +118,45 @@ class ToDo extends Component {
     }
 
     handleEditTask = (editTask) => {
-        const tasks = [...this.state.tasks];
-        const idx = tasks.findIndex(task => task._id === editTask._id);
-        tasks[idx] = editTask;
-        this.setState({
-            tasks
-        });
+        const { _id } = editTask;
+        fetch(`http://localhost:3001/task/${_id}`, {
+            method: "PUT",
+            body: JSON.stringify(editTask),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                const tasks = [...this.state.tasks];
+                const idx = tasks.findIndex(task => task._id === data._id);
+                tasks[idx] = data;
+                this.setState({
+                    tasks
+                });
+            })
+            .catch(error => {
+                console.error("Edit Tasks Request Error", error);
+            });
+    }
+
+    componentDidMount() {
+        fetch("http://localhost:3001/task")
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                this.setState({
+                    tasks: data
+                });
+            })
+            .catch(error => {
+                console.error("Get Tasks Request Error", error);
+            });
     }
 
     render() {
@@ -117,7 +175,7 @@ class ToDo extends Component {
                     <Row className="my-4">
                         <Col className="d-flex justify-content-end">
                             <Button disabled={!!removeTasks.size}
-                                    variant="outline-primary"
+                                    variant="secondary"
                                     onClick={() => {
                                         this.setState({isAddTaskModalVisible: !this.state.isAddTaskModalVisible})
                                     }}>
@@ -125,23 +183,22 @@ class ToDo extends Component {
                             </Button>
                             <Button
                                 className="mx-1"
-                                variant="outline-danger"
-                                disabled={!!!removeTasks.size}
+                                variant="secondary"
+                                disabled={!!!tasks.length}
+                                onClick={this.handleToggleSelectAllTask}
+                            >
+                                {isAllChecked ? 'Unselect' : 'Select All'}
+                            </Button>
+                            <Button
+                                variant="danger"
+                                className={`mx-1 ${isAllChecked ? "d-block" : "d-none"}`}
                                 onClick={() => {
                                     this.setState({
                                         isConfirmModalVisible: !this.state.isConfirmModalVisible
                                     });
                                 }}
                             >
-                                Remove Selected
-                            </Button>
-                            <Button
-                                className="mx-1"
-                                variant="outline-info"
-                                disabled={!!!tasks.length}
-                                onClick={this.handleCheckAll}
-                            >
-                                {isAllChecked ? 'Unselect' : 'Select All'}
+                                Remove
                             </Button>
                         </Col>
                     </Row>
@@ -164,8 +221,8 @@ class ToDo extends Component {
                                             editableTask: task
                                         });
                                     }}
-                                    handleRemoveTaskById={this.handleRemoveTaskById}
-                                    handleRemoveTaskByIds={this.handleRemoveTaskByIds}
+                                    handleRemoveSingleTask={this.handleRemoveSingleTask}
+                                    toggleSetRemoveTaskId={this.toggleSetRemoveTaskId}
                                 />
                             </Col>
                         ))}

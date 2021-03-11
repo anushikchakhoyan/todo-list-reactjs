@@ -11,6 +11,10 @@
     opacity: 1;
 }
 
+.todo-item:hover .todo-item-body {
+   filter: blur(1px);
+}
+
 .todo-item-actions {
     top: 0;
     right: 0;
