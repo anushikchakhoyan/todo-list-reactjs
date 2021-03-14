@@ -4,8 +4,7 @@ import {Col, Container, Row, Button} from "react-bootstrap";
 import AddEditTaskModal from "../../components/ToDo/AddEditTaskModal";
 import ConfirmModal from "../../components/ConfirmModal";
 import Notification from "../../components/Notification";
-import Task from "../../components/ToDo/Task";
-import './index.css';
+import Task from "../../components/ToDo/TaskItem";
 
 class ToDoContainer extends Component {
     constructor(props) {
@@ -72,7 +71,7 @@ class ToDoContainer extends Component {
                 });
             })
             .catch(error => {
-                console.error("Delete Task By ID Request Error", error);
+                console.error("Delete TaskItem By ID Request Error", error);
             });
     }
 

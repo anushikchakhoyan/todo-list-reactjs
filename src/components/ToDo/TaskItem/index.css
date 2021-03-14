@@ -12,7 +12,8 @@
 }
 
 .todo-item:hover .todo-item-body {
-   filter: blur(1px);
+    filter: blur(1px);
+    pointer-events: none;
 }
 
 .todo-item-actions {

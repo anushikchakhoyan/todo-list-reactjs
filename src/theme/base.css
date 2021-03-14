@@ -18,10 +18,7 @@ input:focus {
 }
 
 .app-container {
-    display: flex;
     padding: 20px 0;
-    align-items: center;
-    flex-direction: column;
     background-color: var(--light-gray);
     margin: var(--header-size) auto 0 auto;
     min-height: calc(100vh - var(--header-size));
