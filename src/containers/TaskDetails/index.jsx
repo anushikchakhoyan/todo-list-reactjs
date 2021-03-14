@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {Link} from "react-router-dom";
 import {Breadcrumb, Button, Card, Col, Container, Row} from "react-bootstrap";
 
-import formatDate from "../../helpers/date.helper";
 import ConfirmModal from "../../components/ConfirmModal";
+import formatDate from "../../helpers/date.helper";
 
 class TaskDetailsContainer extends Component {
     state = {
@@ -67,7 +67,7 @@ class TaskDetailsContainer extends Component {
             <Container>
                 <Breadcrumb>
                     <Item>
-                        <><Link to="/">Tasks</Link></>
+                        <Fragment><Link to="/">Tasks</Link></Fragment>
                     </Item>
                     <Item active>{task._id}</Item>
                 </Breadcrumb>

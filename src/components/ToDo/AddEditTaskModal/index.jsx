@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import DatePicker from "react-datepicker";
 import {Modal, Button, Form} from 'react-bootstrap';
 
@@ -7,7 +7,7 @@ import formatDate from "../../../helpers/date.helper";
 const {Header, Title, Body, Footer} = Modal;
 const {Control} = Form;
 
-class AddEditTaskModal extends React.Component {
+class AddEditTaskModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,7 +36,9 @@ class AddEditTaskModal extends React.Component {
         if ((type === 'keypress' && key !== 'Enter') || (!title || !description)) return;
 
         const formData = { ...this.state };
-        formData.date = formatDate(formData.date);
+        if(formData.date) {
+            formData.date = formatDate(formData.date);
+        }
         onSubmit(formData);
         onHide();
     }
