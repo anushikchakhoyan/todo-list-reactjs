@@ -1,13 +1,13 @@
 import React from "react";
 
 import AppHeader from "./components/AppHeader";
-import ToDo from "./components/ToDo";
+import Routes from "./components/Routes";
 
 const App = () => (
     <main className="app-layout">
         <AppHeader/>
         <section className="app-container">
-            <ToDo />
+            <Routes/>
         </section>
     </main>
 )

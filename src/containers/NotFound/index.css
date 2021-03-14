@@ -1,0 +1,9 @@
+.not-found-text {
+    color: black;
+    font-size: 25px;
+    text-align: center;
+}
+
+.not-found-number {
+    font-size: 75px;
+}
