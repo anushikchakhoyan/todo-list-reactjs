@@ -45,7 +45,6 @@ const Task = memo(({task, isChecked, disabled, toggleSetRemoveTaskId, handleRemo
 Task.propTypes = {
     task: PropTypes.shape({
         _id: PropTypes.string,
-        date: PropTypes.string,
         title: PropTypes.string,
         description: PropTypes.string
     }).isRequired,
