@@ -4,23 +4,19 @@ import {Link} from "react-router-dom";
 import {Card, Button} from 'react-bootstrap';
 import {RiCloseFill, MdEdit, AiOutlineEye} from "react-icons/all";
 
-import formatDate from "../../../helpers/date.helper";
 import './index.css';
 
 const {Body, Text} = Card;
 
 const Task = memo(({task, isChecked, disabled, toggleSetRemoveTaskId, handleRemoveSingleTask, handleSetEditTask}) => {
-    const {_id, title, date, description} = task;
+    const {_id, title, description} = task;
 
     return (
         <Card className={`todo-item ${isChecked && 'selected'}`}>
             <Body className="todo-item-body">
                 <input type="checkbox" onChange={() => toggleSetRemoveTaskId(_id)} checked={isChecked}/>
-                {date && (
-                    <Text><b>Created Date:</b> {formatDate(date)}</Text>
-                )}
                 <Text>
-                    Title: {title}
+                    <b>Title:</b> {title}
                 </Text>
                 <Text><b>Description:</b> {description}</Text>
             </Body>
@@ -49,7 +45,6 @@ const Task = memo(({task, isChecked, disabled, toggleSetRemoveTaskId, handleRemo
 Task.propTypes = {
     task: PropTypes.shape({
         _id: PropTypes.string,
-        date: PropTypes.string,
         title: PropTypes.string,
         description: PropTypes.string
     }).isRequired,
