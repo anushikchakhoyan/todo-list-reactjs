@@ -153,6 +153,7 @@ class ToDo extends Component {
                 this.setState({
                     tasks: data
                 });
+                console.log(data);
             })
             .catch(error => {
                 console.error("Get Tasks Request Error", error);
