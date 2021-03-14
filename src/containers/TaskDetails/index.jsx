@@ -67,7 +67,7 @@ class TaskDetailsContainer extends Component {
             <Container>
                 <Breadcrumb>
                     <Item>
-                        <Link to="/">Tasks</Link>
+                        <><Link to="/">Tasks</Link></>
                     </Item>
                     <Item active>{task._id}</Item>
                 </Breadcrumb>
