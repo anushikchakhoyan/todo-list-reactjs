@@ -1,16 +1,20 @@
 import React from 'react';
+import DatePicker from "react-datepicker";
 import {Modal, Button, Form} from 'react-bootstrap';
 
+import formatDate from "../../../helpers/date.helper";
+
 const {Header, Title, Body, Footer} = Modal;
-const { Control } = Form;
+const {Control} = Form;
 
 class AddEditTaskModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            desc: "",
             title: "",
-            ...props.editableTask
+            description: "",
+            ...props.editableTask,
+            date: props.editableTask ? new Date(props.editableTask.date) : new Date()
         }
         this.inputReference = React.createRef();
     }
@@ -20,24 +24,26 @@ class AddEditTaskModal extends React.Component {
     }
 
     handleChange = (event) => {
-        const { name, value } = event.target;
+        const {name, value} = event.target;
         this.setState({
             [name]: value
         });
     }
 
-    handleOnKeyPress = ({ type, key }) => {
-        const { title, description } = this.state;
-        const { onSubmit, onHide } = this.props;
+    handleOnKeyPress = ({type, key}) => {
+        const {onSubmit, onHide} = this.props;
+        const {title, description} = this.state;
         if ((type === 'keypress' && key !== 'Enter') || (!title || !description)) return;
 
-        onSubmit(this.state);
+        const formData = { ...this.state };
+        formData.date = formatDate(formData.date);
+        onSubmit(formData);
         onHide();
     }
 
     render() {
-        const { modalTitle, onHide, isShow } = this.props;
-        const { title, description } = this.state;
+        const {modalTitle, onHide, isShow} = this.props;
+        const {date, title, description} = this.state;
 
         return (
             <Modal
@@ -71,10 +77,15 @@ class AddEditTaskModal extends React.Component {
                         placeholder="Description"
                         onChange={this.handleChange}
                     />
+                    <DatePicker
+                        selected={date}
+                        onChange={date => this.setState({date})}
+                    />
                 </Body>
                 <Footer className="border-0 custom-modal-footer">
                     <Button onClick={onHide} variant="secondary">Cancel</Button>
-                    <Button onClick={this.handleOnKeyPress}  disabled={!(!!title && !!description)} variant="primary">Confirm</Button>
+                    <Button onClick={this.handleOnKeyPress} disabled={!(!!title && !!description)}
+                            variant="primary">Confirm</Button>
                 </Footer>
             </Modal>
         );

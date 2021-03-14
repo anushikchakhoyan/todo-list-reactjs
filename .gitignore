@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # IDEs and editors
- .idea/*
+.idea/*
+.idea/workspace.xml
 
 .eslintcache
