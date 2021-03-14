@@ -1,0 +1,21 @@
+.customNavbar {
+    top: 0;
+    width: 100%;
+    z-index: 5;
+    position: fixed;
+    padding: 0 60px;
+    border-image-slice: 1;
+    background-color: white;
+    border-bottom: 2px solid;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-image-source: linear-gradient(23deg, rgb(108, 117, 125), rgb(211, 192, 218));
+}
+
+.appLogo {
+    max-width: 220px;
+}
+
+.active {
+    color: black;
+    font-weight: bold;
+}

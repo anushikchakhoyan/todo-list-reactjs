@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {Col, Container, Row, Button} from "react-bootstrap";
 
-import AddEditTaskModal from "./AddEditTaskModal";
-import ConfirmModal from "../ConfirmModal";
-import Notification from "../Notification";
-import Task from "./Task";
+import AddEditTaskModal from "../../components/ToDo/AddEditTaskModal";
+import ConfirmModal from "../../components/ConfirmModal";
+import Notification from "../../components/Notification";
+import Task from "../../components/ToDo/Task";
 import './index.css';
 
-class ToDo extends Component {
+class ToDoContainer extends Component {
     constructor(props) {
         super(props);
 
@@ -259,4 +259,4 @@ class ToDo extends Component {
     }
 }
 
-export default ToDo;
+export default ToDoContainer;
