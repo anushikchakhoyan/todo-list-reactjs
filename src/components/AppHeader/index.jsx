@@ -16,7 +16,7 @@ const AppHeader = () => (
         <Toggle aria-controls="responsive-navbar-nav" />
         <Collapse id="responsive-navbar-nav">
             <Nav className="ml-auto">
-                 <Link as={NavLink} to="/" exact activeClassName={styles.active}>ToDo</Link>
+                 <Link as={NavLink} to="/" exact activeClassName={styles.active}>Tasks</Link>
                  <Link as={NavLink} to="/contact-us" exact activeClassName={styles.active}>Contact Us</Link>
                  <Link as={NavLink} to="/about" exact activeClassName={styles.active}>About Us</Link>
             </Nav>
