@@ -4,6 +4,7 @@ import {Col, Container, Row, Button} from "react-bootstrap";
 import AddEditTaskModal from "../../components/ToDo/AddEditTaskModal";
 import ConfirmModal from "../../components/ConfirmModal";
 import Notification from "../../components/Notification";
+import AppLoading from "../../components/AppLoading";
 import Task from "../../components/ToDo/TaskItem";
 
 class ToDoContainer extends Component {
@@ -12,6 +13,7 @@ class ToDoContainer extends Component {
 
         this.state = {
             tasks: [],
+            isLoading: false,
             editableTask: null,
             isAllChecked: false,
             removeTasks: new Set(),
@@ -25,6 +27,7 @@ class ToDoContainer extends Component {
 
         if (!formData.title || !formData.description) return;
 
+        this.setState({isLoading: true});
         fetch("http://localhost:3001/task", {
             method: "POST",
             body: JSON.stringify(formData),
@@ -44,7 +47,10 @@ class ToDoContainer extends Component {
             })
             .catch(error => {
                 console.error("catch Error", error);
-            });
+            })
+            .finally(() => {
+                this.setState({isLoading: false});
+            })
     }
 
     toggleSetRemoveTaskId = (_id) => {
@@ -56,6 +62,7 @@ class ToDoContainer extends Component {
     }
 
     handleRemoveSingleTask = (_id) => {
+        this.setState({isLoading: true});
         fetch(`http://localhost:3001/task/${_id}`, {
             method: "DELETE"
         })
@@ -72,10 +79,14 @@ class ToDoContainer extends Component {
             })
             .catch(error => {
                 console.error("Delete TaskItem By ID Request Error", error);
-            });
+            })
+            .finally(() => {
+                this.setState({isLoading: false});
+            })
     }
 
     handleRemoveSelectedTasks = () => {
+        this.setState({isLoading: true});
         fetch("http://localhost:3001/task", {
             method: "PATCH",
             body: JSON.stringify({ tasks: Array.from(this.state.removeTasks) }),
@@ -99,7 +110,10 @@ class ToDoContainer extends Component {
             })
             .catch(error => {
                 console.error("Bulk Delete Tasks Request Error", error);
-            });
+            })
+            .finally(() => {
+                this.setState({isLoading: false});
+            })
     }
 
     handleToggleSelectAllTask = () => {
@@ -117,6 +131,7 @@ class ToDoContainer extends Component {
     }
 
     handleEditTask = (editTask) => {
+        this.setState({isLoading: true})
         const { _id } = editTask;
         fetch(`http://localhost:3001/task/${_id}`, {
             method: "PUT",
@@ -139,10 +154,16 @@ class ToDoContainer extends Component {
             })
             .catch(error => {
                 console.error("Edit Tasks Request Error", error);
-            });
+            })
+            .finally(() => {
+                this.setState({isLoading: false})
+            })
     }
 
     componentDidMount() {
+        this.setState({
+            isLoading: true
+        })
         fetch("http://localhost:3001/task")
             .then(res => res.json())
             .then(data => {
@@ -155,18 +176,26 @@ class ToDoContainer extends Component {
             })
             .catch(error => {
                 console.error("Get Tasks Request Error", error);
-            });
+            })
+            .finally(() => {
+                this.setState({isLoading: false})
+            })
     }
 
     render() {
         const {
             tasks,
+            isLoading,
             removeTasks,
             isAllChecked,
             editableTask,
             isAddTaskModalVisible,
             isConfirmModalVisible
         } = this.state;
+
+        if (isLoading) {
+            return <AppLoading />
+        }
 
         return (
             <>
