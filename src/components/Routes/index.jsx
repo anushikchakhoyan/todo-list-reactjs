@@ -9,15 +9,35 @@ import ToDoContainer from "../../containers/ToDo";
 
 import PublicRoute from "../PublicRoute";
 
-const Routes = () => (
-    <Switch>
-        <PublicRoute exact path="/" component={ToDoContainer} />
-        <PublicRoute exact path="/about" component={AboutContainer} />
-        <PublicRoute exact path="/contact-us" component={ContactUsContainer} />
-        <PublicRoute exact path="/tasks/:id" component={TaskDetailsContainer} />
-        <Route exact path="/404" component={NotFoundContainer} />
-        <Redirect to="/404" />
-    </Switch>
-);
+const Routes = () => {
+        const pages = [
+                {
+                        path: "/",
+                        component: ToDoContainer
+                },
+                {
+                        path: "/contact-us",
+                        component: ContactUsContainer
+                },
+                {
+                        path: "/about",
+                        component: AboutContainer
+                },
+                {
+                        path: "/tasks/:id",
+                        component: TaskDetailsContainer
+                }
+        ]
+
+        return (
+            <Switch>
+                    {pages.map((page, index) => (
+                        <PublicRoute exact key={index} path={page.path} component={page.component} />
+                    ))}
+                    <Route exact path="/404" component={NotFoundContainer} />
+                    <Redirect to="/404" />
+            </Switch>
+        );
+}
 
 export default Routes;
