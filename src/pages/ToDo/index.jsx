@@ -219,7 +219,8 @@ class ToDoContainer extends Component {
                             </Button>
                             <Button
                                 variant="danger"
-                                className={`mx-1 ${isAllChecked ? "d-block" : "d-none"}`}
+                                className="mx-1"
+                                disabled={!!!removeTasks.size}
                                 onClick={() => {
                                     this.setState({
                                         isConfirmModalVisible: !this.state.isConfirmModalVisible

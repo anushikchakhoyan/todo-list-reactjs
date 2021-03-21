@@ -1,11 +1,11 @@
 import React  from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
-import TaskDetailsContainer from "../../containers/TaskDetails";
-import ContactUsContainer from "../../containers/ContactUs";
-import NotFoundContainer from "../../containers/NotFound";
-import AboutContainer from "../../containers/About";
-import ToDoContainer from "../../containers/ToDo";
+import TaskDetailsContainer from "../../pages/TaskDetails";
+import ContactUsContainer from "../../pages/ContactUs";
+import NotFoundContainer from "../../pages/NotFound";
+import AboutContainer from "../../pages/About";
+import ToDoContainer from "../../pages/ToDo";
 
 import PublicRoute from "../PublicRoute";
 

@@ -118,9 +118,9 @@ class TaskDetailsContainer extends Component {
                                             Created at: <cite title="Created date">{formatDate(task.created_at)}</cite>
                                         </footer>
                                     )}
-                                    {task.updated_at && (
+                                    {task.date && (
                                         <footer className="blockquote-footer">
-                                            Updated at: <cite title="Updated date">{formatDate(task.updated_at)}</cite>
+                                            Updated at: <cite title="Updated date">{formatDate(task.date)}</cite>
                                         </footer>
                                     )}
                                 </blockquote>

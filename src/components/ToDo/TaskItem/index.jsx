@@ -14,15 +14,16 @@ const Task = memo(({task, isChecked, disabled, toggleSetRemoveTaskId, handleRemo
     return (
         <Card className={`todo-item ${isChecked && 'selected'}`}>
             <Body className="todo-item-body">
-                <input type="checkbox" onChange={() => toggleSetRemoveTaskId(_id)} checked={isChecked}/>
-                <Text>
-                    <b>Title:</b> {title}
-                </Text>
+                <Text><b>Title:</b> {title}</Text>
                 <Text><b>Description:</b> {description}</Text>
             </Body>
             <div className="d-flex flex-column align-items-center todo-item-actions">
+                <div className="form-group mb-0">
+                    <input type="checkbox" id={_id} onChange={() => toggleSetRemoveTaskId(_id)} checked={isChecked}/>
+                    <label htmlFor={_id}/>
+                </div>
                 <Link to={`/tasks/${_id}`}>
-                    <Button variant="secondary" className="text-white">
+                    <Button disabled={disabled} variant="secondary" className="text-white">
                         <AiOutlineEye/>
                     </Button>
                 </Link>
