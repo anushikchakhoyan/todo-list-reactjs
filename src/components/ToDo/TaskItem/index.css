@@ -1,5 +1,6 @@
 .todo-item {
     width: 22rem;
+    min-height: 300px;
 }
 
 .todo-item:hover {
@@ -25,4 +26,52 @@
 
 .todo-item.selected {
     background-color: rgba(86, 165, 251, 0.16);
+}
+
+.todo-item.selected .todo-item-actions {
+    opacity: 1;
+}
+
+.todo-item-actions .form-group input {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+
+.todo-item-actions .form-group label {
+    margin-bottom: 0.25rem;
+}
+
+.todo-item-actions .form-group label:before {
+    content:'';
+    height: 35px;
+    width: 40px;
+    padding: 10px;
+    cursor: pointer;
+    position: relative;
+    border-radius: 0.25rem;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #6c757d;
+    -webkit-appearance: none;
+}
+
+.todo-item-actions .form-group input:checked + label:before {
+    background-color: #6c757d;
+}
+
+.todo-item-actions .form-group input:checked + label:after {
+    content: '';
+    top: 3px;
+    left: 16px;
+    width: 10px;
+    height: 20px;
+    display: block;
+    position: absolute;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }

@@ -1,0 +1,9 @@
+.form-wrapper {
+    border-radius: 5px;
+    border: 1px solid #c4c1c1;
+}
+
+.form-btn {
+    height: 40px;
+    width: 240px;
+}
