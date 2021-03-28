@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Col} from "react-bootstrap";
 
 import ContactFormWithHooks from "../../components/ContactFormWithHooks";
-// import ContactForm from "../../components/ContactForm";
 import './index.css';
 
 class ContactUsContainer extends Component {
@@ -14,7 +13,6 @@ class ContactUsContainer extends Component {
                     <small>If you have questions or just want to get in touch, use the form below.</small>
                     <small>We look forward to hearing from you!</small>
                 </div>
-                {/*<ContactForm />*/}
                 <ContactFormWithHooks />
             </Col>
         )

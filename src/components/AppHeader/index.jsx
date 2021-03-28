@@ -16,7 +16,7 @@ const AppHeader = () => {
         },
         {
             to: "/contact-us",
-            title: "Contact"
+            title: "ContactPage"
         },
         {
             to: "/about",
