@@ -10,14 +10,14 @@ const AlertMessage = ({text, show, variant, onClose}) => (
     <div
         style={{
             top: 0,
-            right: '-100%',
+            right: '-35%',
             position: 'absolute',
         }}
     >
         <Toast
             autohide
-            delay={4000}
             show={show}
+            delay={6000}
             onClose={onClose}
             style={{
                 color: "#fff",
