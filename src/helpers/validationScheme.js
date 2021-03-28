@@ -24,10 +24,17 @@ export function emailValidation(email) {
     return 'Please enter a valid email';
 }
 
+// export function isAllValid(formData) {
+//     for (let key in formData) {
+//         if (typeof formData[key] === "object" && !formData[key].valid)
+//             return false;
+//     }
+//     return true;
+// }
+
 export function isAllValid(formData) {
-    for (let key in formData) {
-        if (typeof formData[key] === "object" && !formData[key].valid)
-            return false;
-    }
-    return true;
+    let valid = true;
+    Object.values(formData).forEach(val => val.length > 0 && (valid = false));
+    return valid;
 }
+
