@@ -14,6 +14,8 @@ const ContactContextProvider = ({
                                     history,
                                     ...props
                                 }) => {
+    const minLength2 = minLength(2);
+    const maxLength50 = maxLength(50);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessageText, setErrorMessageText] = useState("");
     const [showErrorMessageAlert, setShowErrorMessageAlert] = useState(false);
@@ -33,10 +35,17 @@ const ContactContextProvider = ({
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const {name, email, message} = formData;
 
-        let valid = !errors.name && !errors.email && !errors.message
+        if(name === "" || email === "" || message === "") {
+            errors.name = isRequired(name);
+            errors.email = isRequired(email);
+            errors.message = isRequired(message);
+        }
 
-        if(valid) {
+        setErrors({...errors});
+
+        if(name && email && message) {
             setIsLoading(true);
             fetch("http://localhost:3001/form", {
                 method: "POST",
@@ -66,8 +75,6 @@ const ContactContextProvider = ({
 
     const handleChange = (event) => {
         const {name, value} = event.target;
-        const maxLength50 = maxLength(50);
-        const minLength2 = minLength(2);
 
         switch (name) {
             case 'name':

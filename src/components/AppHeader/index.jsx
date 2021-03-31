@@ -16,7 +16,7 @@ const AppHeader = () => {
         },
         {
             to: "/contact-us",
-            title: "ContactPage"
+            title: "Contact us"
         },
         {
             to: "/about",
@@ -27,7 +27,8 @@ const AppHeader = () => {
     return (
         <Navbar collapseOnSelect expand="lg" className={styles.customNavbar}>
             <Brand as={NavLink} to="/">
-                <img src={AppLogo} alt="logo" className={styles.appLogo}/>
+                {/*<img src={AppLogo} alt="logo" className={styles.appLogo}/>*/}
+                Test
             </Brand>
             <Toggle aria-controls="responsive-navbar-nav" />
             <Collapse id="responsive-navbar-nav">
