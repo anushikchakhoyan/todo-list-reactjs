@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Col, Container, Row, Button} from "react-bootstrap";
 
 import AddEditTaskModal from "../../components/ToDo/AddEditTaskModal";
@@ -6,29 +6,22 @@ import ConfirmModal from "../../components/ConfirmModal";
 import Notification from "../../components/Notification";
 import AppLoading from "../../components/AppLoading";
 import Task from "../../components/ToDo/TaskItem";
+import {config} from "../../config";
 
-class ToDoContainer extends Component {
-    constructor(props) {
-        super(props);
+const ToDoContainer = () => {
+    const [tasks, setTasks] = useState([]);
+    const [removeTasks, setRemoveTasks] = useState(new Set());
+    const [isLoading, setIsLoading] = useState(false);
+    const [editableTask, setEditableTask] = useState(null);
+    const [isAllChecked, setIsAllChecked] = useState(false);
+    const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
 
-        this.state = {
-            tasks: [],
-            isLoading: false,
-            editableTask: null,
-            isAllChecked: false,
-            removeTasks: new Set(),
-            isAddTaskModalVisible: false,
-            isConfirmModalVisible: false
-        }
-    }
-
-    handleSubmit = (formData) => {
-        const tasks = [...this.state.tasks];
-
+    const handleSubmit = (formData) => {
         if (!formData.title || !formData.description) return;
 
-        this.setState({isLoading: true});
-        fetch("http://localhost:3001/task", {
+        setIsLoading(true);
+        fetch(`${config.baseURL}/task`, {
             method: "POST",
             body: JSON.stringify(formData),
             headers: {
@@ -41,29 +34,25 @@ class ToDoContainer extends Component {
                     throw data.error;
                 }
                 tasks.push(data)
-                this.setState({
-                    tasks
-                });
+                setTasks(tasks);
             })
             .catch(error => {
                 console.error("catch Error", error);
             })
             .finally(() => {
-                this.setState({isLoading: false});
+                setIsLoading(false);
             })
     }
 
-    toggleSetRemoveTaskId = (_id) => {
-        let removeTasks = new Set(this.state.removeTasks);
-        removeTasks.has(_id) ? removeTasks.delete(_id) : removeTasks.add(_id);
-        this.setState({
-            removeTasks
-        });
+    const toggleSetRemoveTaskId = (_id) => {
+        let removeTasksItems = new Set(removeTasks);
+        removeTasksItems.has(_id) ? removeTasksItems.delete(_id) : removeTasksItems.add(_id);
+        setRemoveTasks(removeTasksItems);
     }
 
-    handleRemoveSingleTask = (_id) => {
-        this.setState({isLoading: true});
-        fetch(`http://localhost:3001/task/${_id}`, {
+    const handleRemoveSingleTask = (_id) => {
+        setIsLoading(true);
+        fetch(`${config.baseURL}/task/${_id}`, {
             method: "DELETE"
         })
             .then(res => res.json())
@@ -71,25 +60,21 @@ class ToDoContainer extends Component {
                 if (data.error) {
                     throw data.error;
                 }
-                let tasks = [...this.state.tasks];
-                tasks = tasks.filter(item => item._id !== _id);
-                this.setState({
-                    tasks
-                });
+                setTasks(tasks.filter(item => item._id !== _id))
             })
             .catch(error => {
                 console.error("Delete TaskItem By ID Request Error", error);
             })
             .finally(() => {
-                this.setState({isLoading: false});
+                setIsLoading(false);
             })
     }
 
-    handleRemoveSelectedTasks = () => {
-        this.setState({isLoading: true});
-        fetch("http://localhost:3001/task", {
+    const handleRemoveSelectedTasks = () => {
+        setIsLoading(true);
+        fetch(`${config.baseURL}/task`, {
             method: "PATCH",
-            body: JSON.stringify({ tasks: Array.from(this.state.removeTasks) }),
+            body: JSON.stringify({tasks: Array.from(removeTasks)}),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -99,41 +84,34 @@ class ToDoContainer extends Component {
                 if (data.error) {
                     throw data.error;
                 }
-                let tasks = [...this.state.tasks];
-                const { removeTasks } = this.state;
-                tasks = tasks.filter(item => !removeTasks.has(item._id));
-                this.setState({
-                    tasks,
-                    removeTasks: new Set(),
-                    isAllChecked: false
-                });
+                setTasks(tasks.filter(item => !removeTasks.has(item._id)));
+                setRemoveTasks(new Set());
+                setIsAllChecked(false);
             })
             .catch(error => {
                 console.error("Bulk Delete Tasks Request Error", error);
             })
             .finally(() => {
-                this.setState({isLoading: false});
+                setIsLoading(false);
             })
     }
 
-    handleToggleSelectAllTask = () => {
-        const {tasks, isAllChecked} = this.state;
-        let removeTasks = new Set();
+    const handleToggleSelectAllTask = () => {
+        let removeToggleTasks = new Set();
         if (!isAllChecked) {
-            removeTasks = new Set(this.state.removeTasks);
-            tasks.forEach(task => removeTasks.add(task._id));
+            removeToggleTasks = new Set(removeTasks);
+            tasks.forEach(task => {
+                removeToggleTasks.add(task._id)
+            });
         }
-
-        this.setState({
-            removeTasks,
-            isAllChecked: !isAllChecked
-        });
+        setRemoveTasks(removeToggleTasks);
+        setIsAllChecked(!isAllChecked);
     }
 
-    handleEditTask = (editTask) => {
-        this.setState({isLoading: true})
-        const { _id } = editTask;
-        fetch(`http://localhost:3001/task/${_id}`, {
+    const handleEditTask = (editTask) => {
+        setIsLoading(true);
+        const {_id} = editTask;
+        fetch(`${config.baseURL}/task/${_id}`, {
             method: "PUT",
             body: JSON.stringify(editTask),
             headers: {
@@ -145,146 +123,117 @@ class ToDoContainer extends Component {
                 if (data.error) {
                     throw data.error;
                 }
-                const tasks = [...this.state.tasks];
                 const idx = tasks.findIndex(task => task._id === data._id);
                 tasks[idx] = data;
-                this.setState({
-                    tasks
-                });
+                setTasks(tasks);
             })
             .catch(error => {
                 console.error("Edit Tasks Request Error", error);
             })
             .finally(() => {
-                this.setState({isLoading: false})
+                setIsLoading(false);
             })
     }
 
-    componentDidMount() {
-        this.setState({
-            isLoading: true
-        })
-        fetch("http://localhost:3001/task")
+    useEffect(() => {
+        setIsLoading(true);
+        fetch(`${config.baseURL}/task`)
             .then(res => res.json())
             .then(data => {
                 if (data.error) {
                     throw data.error;
                 }
-                this.setState({
-                    tasks: data
-                });
+                setTasks(data);
             })
             .catch(error => {
                 console.error("Get Tasks Request Error", error);
             })
             .finally(() => {
-                this.setState({isLoading: false})
+                setIsLoading(false);
             })
+    }, [])
+
+    if (isLoading) {
+        return <AppLoading/>
     }
 
-    render() {
-        const {
-            tasks,
-            isLoading,
-            removeTasks,
-            isAllChecked,
-            editableTask,
-            isAddTaskModalVisible,
-            isConfirmModalVisible
-        } = this.state;
-
-        if (isLoading) {
-            return <AppLoading />
-        }
-
-        return (
-            <>
-                <Container fluid>
-                    <Row className="my-4">
-                        <Col className="d-flex justify-content-end">
-                            <Button disabled={!!removeTasks.size}
-                                    variant="secondary"
-                                    onClick={() => {
-                                        this.setState({isAddTaskModalVisible: !this.state.isAddTaskModalVisible})
-                                    }}>
-                                Add Task
-                            </Button>
-                            <Button
-                                className="mx-1"
+    return (
+        <>
+            <Container fluid>
+                <Row className="my-4">
+                    <Col className="d-flex justify-content-end">
+                        <Button disabled={!!removeTasks.size}
                                 variant="secondary"
-                                disabled={!!!tasks.length}
-                                onClick={this.handleToggleSelectAllTask}
-                            >
-                                {isAllChecked ? 'Unselect' : 'Select All'}
-                            </Button>
-                            <Button
-                                variant="danger"
-                                className="mx-1"
-                                disabled={!!!removeTasks.size}
-                                onClick={() => {
-                                    this.setState({
-                                        isConfirmModalVisible: !this.state.isConfirmModalVisible
-                                    });
-                                }}
-                            >
-                                Remove
-                            </Button>
+                                onClick={() => setIsAddTaskModalVisible(!isAddTaskModalVisible)}
+                        >
+                            Add Task
+                        </Button>
+                        <Button
+                            className="mx-1"
+                            variant="secondary"
+                            disabled={!!!tasks.length}
+                            onClick={handleToggleSelectAllTask}
+                        >
+                            {isAllChecked ? 'Unselect' : 'Select All'}
+                        </Button>
+                        <Button
+                            variant="danger"
+                            className="mx-1"
+                            disabled={!!!removeTasks.size}
+                            onClick={() => setIsConfirmModalVisible(!isConfirmModalVisible)}
+                        >
+                            Remove
+                        </Button>
+                    </Col>
+                </Row>
+                <Row className="mt-4 align-items-start">
+                    {!tasks.length && <Notification variant="danger" text="The List is empty."/>}
+                    {tasks.map(task => (
+                        <Col
+                            lg={3}
+                            md={6}
+                            xs={12}
+                            key={task._id}
+                            className="d-flex justify-content-center my-3"
+                        >
+                            <Task
+                                task={task}
+                                disabled={!!removeTasks.size}
+                                isChecked={removeTasks.has(task._id)}
+                                handleSetEditTask={(task) => setEditableTask(task)}
+                                handleRemoveSingleTask={handleRemoveSingleTask}
+                                toggleSetRemoveTaskId={toggleSetRemoveTaskId}
+                            />
                         </Col>
-                    </Row>
-                    <Row className="mt-4 align-items-start">
-                        {!tasks.length && <Notification variant="danger" text="The List is empty."/>}
-                        {tasks.map(task => (
-                            <Col
-                                lg={3}
-                                md={6}
-                                xs={12}
-                                key={task._id}
-                                className="d-flex justify-content-center my-3"
-                            >
-                                <Task
-                                    task={task}
-                                    disabled={!!removeTasks.size}
-                                    isChecked={removeTasks.has(task._id)}
-                                    handleSetEditTask={(task) => {
-                                        this.setState({
-                                            editableTask: task
-                                        });
-                                    }}
-                                    handleRemoveSingleTask={this.handleRemoveSingleTask}
-                                    toggleSetRemoveTaskId={this.toggleSetRemoveTaskId}
-                                />
-                            </Col>
-                        ))}
-                    </Row>
-                </Container>
-                {isConfirmModalVisible && <ConfirmModal
-                    isShow={true}
-                    onSubmit={this.handleRemoveSelectedTasks}
-                    message={`Would you like to remove  ${removeTasks.size} task(s)? `}
-                    onClose={() => this.setState({isConfirmModalVisible: !this.state.isConfirmModalVisible})}
-                />
-                }
-                {editableTask && <AddEditTaskModal
-                    isShow={true}
-                    modalTitle="Edit Task"
-                    editableTask={editableTask}
-                    onSubmit={this.handleEditTask}
-                    onHide={() => {
-                        this.setState({editableTask: null})
-                    }}
-                />
-                }
-                {isAddTaskModalVisible && <AddEditTaskModal
-                    isShow={true}
-                    modalTitle="Add Task"
-                    editableTask={editableTask}
-                    onSubmit={this.handleSubmit}
-                    onHide={() => this.setState({isAddTaskModalVisible: !this.state.isAddTaskModalVisible})}
-                />
-                }
-            </>
-        )
-    }
+                    ))}
+                </Row>
+            </Container>
+
+            {isConfirmModalVisible &&
+            <ConfirmModal
+                isShow={true}
+                onSubmit={handleRemoveSelectedTasks}
+                message={`Would you like to remove  ${removeTasks.size} task(s)? `}
+                onClose={() => setIsConfirmModalVisible(!isConfirmModalVisible)}
+            />}
+            {editableTask &&
+            <AddEditTaskModal
+                isShow={true}
+                modalTitle="Edit Task"
+                editableTask={editableTask}
+                onSubmit={handleEditTask}
+                onHide={() => setEditableTask(null)}
+            />}
+            {isAddTaskModalVisible &&
+            <AddEditTaskModal
+                isShow={true}
+                modalTitle="Add Task"
+                editableTask={editableTask}
+                onSubmit={handleSubmit}
+                onHide={() => setIsAddTaskModalVisible(!isAddTaskModalVisible)}
+            />}
+        </>
+    )
 }
 
 export default ToDoContainer;

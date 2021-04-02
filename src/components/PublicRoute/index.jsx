@@ -1,12 +1,16 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-const PublicRoute = ({ component: Component, ...rest }) => (
+const PublicRoute = ({ Component, Provider, ...rest }) => (
     <Route
         {...rest}
         render={props => {
             return (
-                <Component {...props} />
+                Provider ? (
+                    <Provider>
+                        <Component {...props} />
+                    </Provider>
+                ) : <Component {...props} />
             );
         }}
     />
