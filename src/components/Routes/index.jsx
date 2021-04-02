@@ -15,42 +15,31 @@ const Routes = () => {
     const pages = [
         {
             path: "/",
-            component: ToDoContainer
+            Component: ToDoContainer
         },
         {
             path: "/contact-us",
-            component: ContactUsContainer
+            Component: ContactUsContainer,
+            Provider: ContactContextProvider,
         },
         {
             path: "/about",
-            component: AboutContainer
+            Component: AboutContainer
         },
         {
             path: "/tasks/:id",
-            component: TaskDetailsContainer
+            Component: TaskDetailsContainer
         }
     ]
 
-    const pageRoutes = pages.map((page, index) => {
-        if (page.path === "/contact-us") {
-            return (
-                <ContactContextProvider key={index}>
-                    <PublicRoute exact  path={page.path} component={page.component}/>
-                </ContactContextProvider>
-            )
-        }
-            return <Route
-                key={index}
-                path={page.path}
-                component={page.component}
-                exact
-            />
-
-    })
-    
     return (
         <Switch>
-            {pageRoutes}
+            {pages.map((page, index) => {
+                const {path, Provider, Component} = page;
+                return (
+                    <PublicRoute exact  key={index}  path={path} component={Component} Provider={Provider}/>
+                )
+            })}
             <Route exact path="/404" component={NotFoundContainer}/>
             <Redirect to="/404"/>
         </Switch>
