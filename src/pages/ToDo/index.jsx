@@ -7,8 +7,11 @@ import Notification from "../../components/Notification";
 import AppLoading from "../../components/AppLoading";
 import Task from "../../components/ToDo/TaskItem";
 import {config} from "../../config";
+import {useFetch} from "../../helpers/useFetch";
 
 const ToDoContainer = () => {
+    const Data = useFetch("/task", {});
+
     const [tasks, setTasks] = useState([]);
     const [removeTasks, setRemoveTasks] = useState(new Set());
     const [isLoading, setIsLoading] = useState(false);
@@ -136,22 +139,9 @@ const ToDoContainer = () => {
     }
 
     useEffect(() => {
-        setIsLoading(true);
-        fetch(`${config.baseURL}/task`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.error) {
-                    throw data.error;
-                }
-                setTasks(data);
-            })
-            .catch(error => {
-                console.error("Get Tasks Request Error", error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            })
-    }, [])
+        setTasks(Data.response);
+        setIsLoading(Data.loading);
+    }, [Data]);
 
     if (isLoading) {
         return <AppLoading/>

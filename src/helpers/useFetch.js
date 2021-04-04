@@ -12,24 +12,21 @@ export function useFetch(url, options) {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`${config.baseURL}${url}`, options)
-            .then(result => result.json())
-            .then(data => {
-                if (data.error) {
-                    throw data.error;
-                }
+        const fetchData = async () => {
+            try {
+                const res = await fetch(`${config.baseURL}${url}`, options);
+                const data = await res.json();
                 setResponse(data);
-            })
-            .catch(error => {
+            } catch (error) {
                 if (error.status === HttpStatusCode.SOMETHING_WENT_WRONG) {
                     return history.push('/404');
                 }
                 setError(error);
-            })
-            .finally(() => {
+            } finally {
                 setLoading(false);
-            })
+            }
+        }
+    fetchData();
     }, [history, url]);
-    console.log({ response, error, loading })
     return { response, error, loading };
 }
