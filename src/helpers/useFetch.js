@@ -29,7 +29,7 @@ export function useFetch(url, options) {
             .finally(() => {
                 setLoading(false);
             })
-    }, []);
+    }, [history, url]);
     console.log({ response, error, loading })
     return { response, error, loading };
 }
