@@ -37,7 +37,7 @@ const Routes = () => {
             {pages.map((page, index) => {
                 const {path, Provider, Component} = page;
                 return (
-                    <PublicRoute exact  key={index}  path={path} component={Component} Provider={Provider}/>
+                    <PublicRoute exact  key={index}  path={path} Component={Component} Provider={Provider}/>
                 )
             })}
             <Route exact path="/404" component={NotFoundContainer}/>
