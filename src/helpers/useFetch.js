@@ -30,6 +30,5 @@ export function useFetch(url, options) {
                 setLoading(false);
             })
     }, []);
-    console.log({ response, error, loading })
     return { response, error, loading };
 }
