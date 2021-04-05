@@ -6,6 +6,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 import Notification from "../../components/Notification";
 import AppLoading from "../../components/AppLoading";
 import Task from "../../components/ToDo/TaskItem";
+import {useFetch} from "../../helpers/useFetch";
 import {config} from "../../config";
 
 const ToDoContainer = () => {
@@ -16,6 +17,8 @@ const ToDoContainer = () => {
     const [isAllChecked, setIsAllChecked] = useState(false);
     const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+
+    const Data = useFetch("/task", {});
 
     const handleSubmit = (formData) => {
         if (!formData.title || !formData.description) return;
@@ -136,22 +139,13 @@ const ToDoContainer = () => {
     }
 
     useEffect(() => {
-        setIsLoading(true);
-        fetch(`${config.baseURL}/task`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.error) {
-                    throw data.error;
-                }
-                setTasks(data);
-            })
-            .catch(error => {
-                console.error("Get Tasks Request Error", error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            })
-    }, [])
+        const {response, loading} = Data;
+        if (response) {
+            setTasks(response);
+            setIsLoading(loading);
+        }
+        console.log(Data);
+    }, [Data.response, Data.loading]);
 
     if (isLoading) {
         return <AppLoading/>
