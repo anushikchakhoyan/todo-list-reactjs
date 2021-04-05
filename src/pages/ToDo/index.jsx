@@ -6,12 +6,10 @@ import ConfirmModal from "../../components/ConfirmModal";
 import Notification from "../../components/Notification";
 import AppLoading from "../../components/AppLoading";
 import Task from "../../components/ToDo/TaskItem";
-import {config} from "../../config";
 import {useFetch} from "../../helpers/useFetch";
+import {config} from "../../config";
 
 const ToDoContainer = () => {
-    const Data = useFetch("/task", {});
-
     const [tasks, setTasks] = useState([]);
     const [removeTasks, setRemoveTasks] = useState(new Set());
     const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +17,8 @@ const ToDoContainer = () => {
     const [isAllChecked, setIsAllChecked] = useState(false);
     const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+
+    const Data = useFetch("/task", {});
 
     const handleSubmit = (formData) => {
         if (!formData.title || !formData.description) return;
@@ -139,9 +139,13 @@ const ToDoContainer = () => {
     }
 
     useEffect(() => {
-        setTasks(Data.response);
-        setIsLoading(Data.loading);
-    }, [Data]);
+        const {response, loading} = Data;
+        if (response) {
+            setTasks(response);
+            setIsLoading(loading);
+        }
+        console.log(Data);
+    }, [Data.response, Data.loading]);
 
     if (isLoading) {
         return <AppLoading/>

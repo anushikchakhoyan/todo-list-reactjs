@@ -28,5 +28,6 @@ export function useFetch(url, options) {
         }
     fetchData();
     }, [history, url]);
+    console.log({ response, error, loading });
     return { response, error, loading };
 }
